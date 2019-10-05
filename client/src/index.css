@@ -1,0 +1,127 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+/** Inventory **/
+.searchBarRight {
+  display: flex;
+  flex-direction: row;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.search {
+  margin: 10px 10px;
+}
+
+.titleBar {
+  display: flex;
+  flex-direction: row;
+  background: lightgray;
+  padding: 10px;
+}
+
+.titleItem {
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+}
+
+.partList {
+  display: flex;
+  flex-direction: column;
+}
+.part {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+  margin: 3px 0px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+.partField {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex: 1;
+}
+.partText,
+.partSelect {
+  width: 70%;
+}
+
+.iconBtn {
+  background: transparent;
+  border: none;
+  margin: 0px 3px;
+}
+
+.iconBtn > img {
+  width: 24px;
+}
+
+.iconBtn > img:hover {
+  transform: scale(1.1);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0px;
+}
+
+.form-field > label {
+  margin: 0px;
+}
+
+#newPartError,
+#newProjectError,
+#partFromInventoryError,
+#partFromWishlistError {
+  color: red;
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin: 3px 0px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+}
+.projectHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 10px;
+  margin: 3px 0px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+  background: lightgray;
+}
+.projectField {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex: 1;
+}
