@@ -142,13 +142,13 @@ class Inventory extends Component {
           ></input>
         </div>
         <div className="titleBar">
-          <div className="titleItem">Select Part</div>
+          <div className="titleItem shortTitle">Select</div>
           <div className="titleItem">Part Name</div>
           <div className="titleItem">Part Location</div>
           <div className="titleItem">Part Amount</div>
           <div className="titleItem">Last Counter</div>
           <div className="titleItem">Date Counted</div>
-          <div className="titleItem">Order Form</div>
+          <div className="titleItem shortTitle">Order Form</div>
         </div>
         <div className="partList">
           {this.state.parts.map((part, i) => {
@@ -157,13 +157,11 @@ class Inventory extends Component {
             ) {
               return (
                 <div key={part.id} id={part.id} className="part">
-                  <div className="partField">
-                    <input
-                      type="checkbox"
-                      name="selected"
-                      className="partCheckbox"
-                    ></input>
-                  </div>
+                  <input
+                    type="checkbox"
+                    name="selected"
+                    className="partCheckbox shortField"
+                  ></input>
                   <div className="partField" id={`${part.id}_name`}>
                     <input
                       type="text"
@@ -233,11 +231,9 @@ class Inventory extends Component {
                       }}
                     ></input>
                   </div>
-                  <div className="partField">
-                    <button className="iconBtn">
-                      <img src={form} alt="order form icon"></img>
-                    </button>
-                  </div>
+                  <button className="iconBtn shortField">
+                    <img src={form} alt="order form icon"></img>
+                  </button>
                 </div>
               );
             }

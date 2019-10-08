@@ -38,7 +38,7 @@ let projects = [
   {
     name: "Robot",
     description: "test description",
-    id: "p_5d8b6c308d9228",
+    id: "proj_5d8b6c308d9228",
     parts: [
       {
         name: "VictorSP",
@@ -52,11 +52,20 @@ let projects = [
   }
 ];
 
+let wishes = [
+  {
+    name: "Talon SRX",
+    amount: 8,
+    id: "98jxvdbh4ai13x"
+  }
+];
+
 class App extends Component {
   state = {
-    activeTab: "Projects",
+    activeTab: "Wish List",
     parts: parts,
-    projects: projects
+    projects: projects,
+    wishes: wishes
   };
 
   handleSwitchTab = tab => {
@@ -159,6 +168,46 @@ class App extends Component {
     this.setState({ projects });
   };
 
+  handleAddWish = newWish => {
+    let { wishes } = this.state;
+    newWish["id"] = uniqid("wish_");
+    wishes.push(newWish);
+    this.setState({ wishes });
+  };
+
+  handleSave = (id, field, value) => {
+    let { parts } = this.state;
+    parts[
+      parts.findIndex(e => {
+        return e.id === id;
+      })
+    ][field] = field !== "amount" ? value : parseInt(value);
+    this.setState({ parts });
+  };
+
+  handleRemoveWish = wishesToRemove => {
+    let { wishes } = this.state;
+    wishesToRemove.forEach(id => {
+      wishes.splice(
+        wishes.findIndex(wish => {
+          return wish.id === id;
+        }),
+        1
+      );
+    });
+    this.setState({ wishes });
+  };
+
+  handleSaveWish = (id, field, value) => {
+    let { wishes } = this.state;
+    wishes[
+      wishes.findIndex(e => {
+        return e.id === id;
+      })
+    ][field] = field !== "amount" ? value : parseInt(value);
+    this.setState({ wishes });
+  };
+
   render() {
     return (
       <div className="content">
@@ -232,7 +281,13 @@ class App extends Component {
             ></Projects>
           </TabPane>
           <TabPane tabId="Wish List">
-            <WishList></WishList>
+            <WishList
+              parts={this.state.parts}
+              wishes={this.state.wishes}
+              onAddWish={this.handleAddWish}
+              onRemoveWish={this.handleRemoveWish}
+              onSave={this.handleSaveWish}
+            ></WishList>
           </TabPane>
         </TabContent>
       </div>
