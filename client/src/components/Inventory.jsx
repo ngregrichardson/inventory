@@ -80,6 +80,7 @@ class Inventory extends Component {
       }
     }
     if (
+      partsToRemove.length !== 0 &&
       window.confirm(
         `Are you sure you want to remove ${partsToRemove.length} parts?`
       )

@@ -134,6 +134,31 @@ class App extends Component {
     }
   };
 
+  handleRemovePartFromProject = (proj_id, part_id) => {
+    let { projects } = this.state;
+    let index = projects.findIndex(e => {
+      return e.id === proj_id;
+    });
+    projects[index].parts.splice(
+      projects[index].parts.findIndex(e => {
+        return e.id === part_id;
+      }),
+      1
+    );
+    this.setState({ projects });
+  };
+
+  handleRemoveProject = proj_id => {
+    let { projects } = this.state;
+    projects.splice(
+      projects.findIndex(e => {
+        return e.id === proj_id;
+      }),
+      1
+    );
+    this.setState({ projects });
+  };
+
   render() {
     return (
       <div className="content">
@@ -202,6 +227,8 @@ class App extends Component {
               onAddProject={this.handleAddProject}
               onSave={this.handleSaveProjectPart}
               onAddPartFromInventory={this.handleAddPartFromInventory}
+              onRemovePartFromProject={this.handleRemovePartFromProject}
+              onRemoveProject={this.handleRemoveProject}
             ></Projects>
           </TabPane>
           <TabPane tabId="Wish List">

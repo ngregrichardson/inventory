@@ -58,6 +58,7 @@ class Projects extends Component {
   };
 
   togglePartFromInventoryModal = proj => {
+    this.handleError("partFromInventory", "");
     if (!this.state.partFromInventoryModal) {
       this.setState({
         partFromInventoryModal: !this.state.partFromInventoryModal,
@@ -66,7 +67,9 @@ class Projects extends Component {
       });
     } else {
       this.setState({
-        partFromInventoryModal: !this.state.partFromInventoryModal
+        partFromInventoryModal: !this.state.partFromInventoryModal,
+        addingPartToProject: { parts: [] },
+        addingPartToProjectId: ""
       });
     }
   };
@@ -141,6 +144,22 @@ class Projects extends Component {
     this.togglePartFromInventoryModal();
   };
 
+  handleRemovePartFromProject = (proj_id, part_id) => {
+    this.props.onRemovePartFromProject(proj_id, part_id);
+  };
+
+  handleRemoveProject = proj_id => {
+    if (
+      window.confirm(
+        `Are you sure you want to remove the ${
+          this.state.projects.find(e => e.id === proj_id).name
+        } project?`
+      )
+    ) {
+      this.props.onRemoveProject(proj_id);
+    }
+  };
+
   render() {
     return (
       <div className="content">
@@ -182,7 +201,12 @@ class Projects extends Component {
                       <i>{project.description}</i>
                     </span>
                     <div className="projectField">
-                      <button className="iconBtn">
+                      <button
+                        className="iconBtn"
+                        onClick={() => {
+                          this.handleRemoveProject(project.id);
+                        }}
+                      >
                         <img src={remove} alt="remove project icon"></img>
                       </button>
                     </div>
@@ -240,7 +264,15 @@ class Projects extends Component {
                             ></input>
                           </div>
                           <div>
-                            <button className="iconBtn">
+                            <button
+                              className="iconBtn"
+                              onClick={() => {
+                                this.handleRemovePartFromProject(
+                                  project.id,
+                                  part.id
+                                );
+                              }}
+                            >
                               <img src={remove} alt="remove part icon"></img>
                             </button>
                           </div>
@@ -313,11 +345,9 @@ class Projects extends Component {
                   valueField="id"
                   searchBy="name"
                   options={this.state.parts.filter(e => {
-                    return (
-                      this.state.addingPartToProject.parts.filter(
-                        p => p.name !== e.name
-                      ).length > 0
-                    );
+                    return !this.state.addingPartToProject.parts
+                      .map(x => x.name)
+                      .includes(e.name);
                   })}
                   className="ml-1 flex-grow-1"
                   onChange={values => {
