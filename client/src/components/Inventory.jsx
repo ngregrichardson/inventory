@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Badge
+} from "reactstrap";
 import add from "../images/add.svg";
 import remove from "../images/remove.svg";
 import search from "../images/search.svg";
@@ -62,6 +69,7 @@ class Inventory extends Component {
       name: document.getElementById("newPartName").value,
       location: document.getElementById("newPartLocation").value,
       amount: parseInt(document.getElementById("newPartAmount").value),
+      avaliableAmount: parseInt(document.getElementById("newPartAmount").value),
       counter: document.getElementById("newPartCounter").value,
       dateCounted: date,
       link: document.getElementById("newPartLink").value
@@ -192,6 +200,25 @@ class Inventory extends Component {
                     </select>
                   </div>
                   <div className="partField" id={`${part.id}_amount`}>
+                    <Badge
+                      color={
+                        part.avaliableAmount === 0
+                          ? "danger"
+                          : part.avaliableAmount < part.amount / 2
+                          ? "warning"
+                          : "success"
+                      }
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginRight: "5px",
+                        width: "20px"
+                      }}
+                    >
+                      {part.avaliableAmount}
+                    </Badge>
                     <input
                       type="number"
                       name="amount"

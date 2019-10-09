@@ -11,7 +11,7 @@ let parts = [
   {
     name: "Computer",
     location: "Computer Lab",
-    amount: 5,
+    amount: 10,
     counter: "Noah",
     dateCounted: "2019-02-26",
     id: "5d8b6c300d9168"
@@ -62,7 +62,7 @@ let wishes = [
 
 class App extends Component {
   state = {
-    activeTab: "Wish List",
+    activeTab: "Inventory",
     parts: parts,
     projects: projects,
     wishes: wishes
