@@ -17,6 +17,7 @@ class Inventory extends Component {
     locations: this.props.locations,
     counters: this.props.counters,
     parts: this.props.parts,
+    projects: this.props.projects,
     term: "",
     newPartModal: false,
     newPartError: ""
@@ -102,11 +103,8 @@ class Inventory extends Component {
   };
 
   handleSave = (id, field) => {
-    this.props.onSave(
-      id,
-      field,
-      document.getElementById(`${id}_${field}`).firstChild.value
-    );
+    let value = document.getElementById(`${id}_${field}`).children[1].value;
+    this.props.onSave(id, field, field === "amount" ? parseInt(value) : value);
   };
 
   handleSearch = () => {
@@ -175,7 +173,8 @@ class Inventory extends Component {
                       type="text"
                       name="name"
                       className="partText"
-                      defaultValue={part.name}
+                      value={part.name}
+                      onChange={e => this.props.onChange(e.target.value)}
                       onBlur={() => {
                         this.handleSave(part.id, "name");
                       }}
@@ -202,9 +201,9 @@ class Inventory extends Component {
                   <div className="partField" id={`${part.id}_amount`}>
                     <Badge
                       color={
-                        part.avaliableAmount === 0
+                        part.availableAmount === 0
                           ? "danger"
-                          : part.avaliableAmount < part.amount / 2
+                          : part.availableAmount < part.amount / 2
                           ? "warning"
                           : "success"
                       }
@@ -217,7 +216,7 @@ class Inventory extends Component {
                         width: "20px"
                       }}
                     >
-                      {part.avaliableAmount}
+                      {part.availableAmount}
                     </Badge>
                     <input
                       type="number"
@@ -227,6 +226,7 @@ class Inventory extends Component {
                       onBlur={() => {
                         this.handleSave(part.id, "amount");
                       }}
+                      min="0"
                     ></input>
                   </div>
                   <div className="partField" id={`${part.id}_counter`}>
@@ -252,7 +252,8 @@ class Inventory extends Component {
                       type="date"
                       name="dateCounted"
                       className="partText"
-                      defaultValue={part.dateCounted}
+                      value={part.dateCounted}
+                      onChange={e => this.props.onChange(e.target.value)}
                       onBlur={() => {
                         this.handleSave(part.id, "dateCounted");
                       }}

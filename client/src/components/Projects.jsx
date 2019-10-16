@@ -121,6 +121,7 @@ class Projects extends Component {
   };
 
   handleAddPartFromInventory = () => {
+    this.handleError("partFromInventory", "");
     if (
       this.state.addPartFromInventoryId === "" ||
       this.state.addPartFromInventoryId === undefined
@@ -136,11 +137,22 @@ class Projects extends Component {
         "The amount field is required."
       );
     }
-    this.props.onAddPartFromInventory(
+    if (
+      parseInt(document.getElementById("addPartFromInventoryAmount").value) < 0
+    ) {
+      return this.handleError(
+        "partFromInventory",
+        "The amount field cannot be lower than 0."
+      );
+    }
+    let error = this.props.onAddPartFromInventory(
       this.state.addingPartToProjectId,
       this.state.addPartFromInventoryId,
-      document.getElementById("addPartFromInventoryAmount").value
+      parseInt(document.getElementById("addPartFromInventoryAmount").value)
     );
+    if (error !== undefined) {
+      return this.handleError("partFromInventory", error);
+    }
     this.togglePartFromInventoryModal();
   };
 
@@ -159,6 +171,17 @@ class Projects extends Component {
       this.props.onRemoveProject(proj_id);
     }
   };
+
+  /**
+   *                     <button
+                      className="iconBtn"
+                      id="addPartFromWishlist"
+                      title="Add part from wishlist"
+                      onClick={this.togglePartFromWishlistModal}
+                    >
+                      <img src={addWish} alt="add part icon"></img>
+                    </button>
+   */
 
   render() {
     return (
@@ -222,14 +245,6 @@ class Projects extends Component {
                     >
                       <img src={addPart} alt="add part icon"></img>
                     </button>
-                    <button
-                      className="iconBtn"
-                      id="addPartFromWishlist"
-                      title="Add part from wishlist"
-                      onClick={this.togglePartFromWishlistModal}
-                    >
-                      <img src={addWish} alt="add part icon"></img>
-                    </button>
                   </div>
                   <div
                     className="partList"
@@ -251,16 +266,21 @@ class Projects extends Component {
                           </div>
                           <div
                             className="partField"
-                            id={`${project.id}_${part.id}_amount`}
+                            id={`${project.id}_${part.id}_proj_amount`}
                           >
                             <input
                               type="number"
-                              name="amount"
+                              name="proj_amount"
                               className="partText"
-                              defaultValue={part.amount}
-                              onBlur={() => {
-                                this.handleSave(project.id, part.id, "amount");
+                              defaultValue={part.proj_amount}
+                              onInput={() => {
+                                this.handleSave(
+                                  project.id,
+                                  part.id,
+                                  "proj_amount"
+                                );
                               }}
+                              min="0"
                             ></input>
                           </div>
                           <div>
@@ -363,6 +383,7 @@ class Projects extends Component {
                   id="addPartFromInventoryAmount"
                   placeholder="Amount..."
                   className="ml-1 flex-grow-1"
+                  min="0"
                 ></input>
               </div>
             </div>

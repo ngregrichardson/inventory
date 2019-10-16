@@ -14,7 +14,8 @@ let parts = [
     amount: 10,
     counter: "Noah",
     dateCounted: "2019-02-26",
-    id: "5d8b6c300d9168"
+    id: "5d8b6c300d9168",
+    availableAmount: 10
   },
   {
     name: "VictorSP",
@@ -22,7 +23,8 @@ let parts = [
     amount: 5,
     counter: "Noah",
     dateCounted: "2019-02-26",
-    id: "5d8b6ca7608314"
+    id: "5d8b6ca7608314",
+    availableAmount: 5
   },
   {
     name: "RoboRIO",
@@ -30,7 +32,8 @@ let parts = [
     amount: 5,
     counter: "Noah",
     dateCounted: "2019-02-26",
-    id: "5d8b6cabb9db24"
+    id: "5d8b6cabb9db24",
+    availableAmount: 5
   }
 ];
 
@@ -46,7 +49,9 @@ let projects = [
         amount: 5,
         counter: "Noah",
         dateCounted: "2019-02-26",
-        id: "5d8b6ca7608314"
+        id: "5d8b6ca7608314",
+        availableAmount: 5,
+        proj_amount: 5
       }
     ]
   }
@@ -65,7 +70,14 @@ class App extends Component {
     activeTab: "Inventory",
     parts: parts,
     projects: projects,
-    wishes: wishes
+    wishes: wishes,
+    mainError: ""
+  };
+
+  handleError = err => {
+    if (this.state.mainError !== err) {
+      this.setState({ mainError: err });
+    }
   };
 
   handleSwitchTab = tab => {
@@ -94,13 +106,27 @@ class App extends Component {
     this.setState({ parts });
   };
 
-  handleSave = (id, field, value) => {
+  handleSavePart = (id, field, value) => {
     let { parts } = this.state;
-    parts[
-      parts.findIndex(e => {
-        return e.id === id;
-      })
-    ][field] = field !== "amount" ? value : parseInt(value);
+    let partIndex = parts.findIndex(e => {
+      return e.id === id;
+    });
+    if (field !== "amount") {
+      parts[partIndex][field] = value;
+    } else {
+      if (
+        parts[partIndex].availableAmount + (value - parts[partIndex].amount) <
+        0
+      ) {
+        return this.handleError(
+          "You have too many parts in projects. This change will not save."
+        );
+      } else {
+        parts[partIndex].availableAmount =
+          parts[partIndex].availableAmount + (value - parts[partIndex].amount);
+        parts[partIndex].amount = value;
+      }
+    }
     this.setState({ parts });
   };
 
@@ -112,15 +138,33 @@ class App extends Component {
   };
 
   handleSaveProjectPart = (proj_id, part_id, field, value) => {
-    let { projects } = this.state;
+    let { parts, projects } = this.state;
+    let part = parts.find(e => {
+      return e.id === part_id;
+    });
+    let partIndex = parts.indexOf(part);
     let index = projects.findIndex(e => {
       return e.id === proj_id;
     });
+    if (field === "proj_amount") {
+      let currentValue =
+        projects[index].parts[
+          projects[index].parts.findIndex(e => {
+            return e.id === part_id;
+          })
+        ].proj_amount;
+      if (part.availableAmount + (currentValue - value) < 0) {
+        return this.handleError("You do not have enough parts in stock");
+      } else {
+        parts[partIndex].availableAmount += currentValue - value;
+      }
+    }
     projects[index].parts[
       projects[index].parts.findIndex(e => {
         return e.id === part_id;
       })
     ][field] = value;
+    this.setState({ parts, projects });
   };
 
   handleAddPartFromInventory = (proj_id, part_id, amount) => {
@@ -128,6 +172,7 @@ class App extends Component {
     let part = parts.find(e => {
       return e.id === part_id;
     });
+    let partIndex = parts.indexOf(part);
     let index = projects.findIndex(e => {
       return e.id === proj_id;
     });
@@ -136,25 +181,39 @@ class App extends Component {
         return e.id === part_id;
       }) === undefined
     ) {
+      if (part.availableAmount - amount < 0) {
+        return "You do not have that many parts in stock";
+      }
+      parts[partIndex].availableAmount -= amount;
+      part.proj_amount = amount;
       projects[index].parts.push(part);
-      projects[index].parts[projects[index].parts.length - 1]["maxAmount"] =
-        projects[index].parts[projects[index].parts.length - 1].amount;
-      projects[index].parts[projects[index].parts.length - 1].amount = amount;
+      this.setState({ projects, parts });
+    } else {
+      return "This part is already in this project";
     }
   };
 
   handleRemovePartFromProject = (proj_id, part_id) => {
-    let { projects } = this.state;
+    let { parts, projects } = this.state;
+    let partIndex = parts.findIndex(e => {
+      return e.id === part_id;
+    });
     let index = projects.findIndex(e => {
       return e.id === proj_id;
     });
+    parts[partIndex].availableAmount +=
+      projects[index].parts[
+        projects[index].parts.findIndex(e => {
+          return e.id === part_id;
+        })
+      ].amount;
     projects[index].parts.splice(
       projects[index].parts.findIndex(e => {
         return e.id === part_id;
       }),
       1
     );
-    this.setState({ projects });
+    this.setState({ parts, projects });
   };
 
   handleRemoveProject = proj_id => {
@@ -255,6 +314,7 @@ class App extends Component {
               Wish List
             </NavLink>
           </NavItem>
+          <div id="mainError">{this.state.mainError}</div>
         </Nav>
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="Inventory">
@@ -264,7 +324,8 @@ class App extends Component {
               parts={this.state.parts}
               onAddPart={this.handleAddPart}
               onRemovePart={this.handleRemovePart}
-              onSave={this.handleSave}
+              onSave={this.handleSavePart}
+              projects={this.state.projects}
             ></Inventory>
           </TabPane>
           <TabPane tabId="Projects">
