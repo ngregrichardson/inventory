@@ -50,7 +50,8 @@ class App extends Component {
   };
 
   handleRemovePart = partsToRemove => {
-    let { parts } = this.state;
+    console.log(partsToRemove);
+    let { parts, projects } = this.state;
     partsToRemove.forEach(id => {
       parts.splice(
         parts.findIndex(part => {
@@ -59,8 +60,19 @@ class App extends Component {
         1
       );
     });
-    this.setState({ parts });
+    projects.forEach(proj => {
+      let projParts = proj.parts.filter(part =>
+        partsToRemove.includes(part.id)
+      );
+      if (projParts.length > 0) {
+        for (var i = 0; i < projParts.length; i++) {
+          proj.parts.splice(proj.parts.indexOf(projParts[i]), 1);
+        }
+      }
+    });
+    this.setState({ parts, projects });
     save(parts, "parts");
+    save(projects, "projects");
   };
 
   handleSavePart = (id, field, value) => {
@@ -171,7 +183,7 @@ class App extends Component {
         projects[index].parts.findIndex(e => {
           return e.id === part_id;
         })
-      ].amount;
+      ].proj_amount;
     projects[index].parts.splice(
       projects[index].parts.findIndex(e => {
         return e.id === part_id;
@@ -184,7 +196,13 @@ class App extends Component {
   };
 
   handleRemoveProject = proj_id => {
-    let { projects } = this.state;
+    let { projects, parts } = this.state;
+    let partsToRemove =
+      projects[projects.findIndex(proj => proj.id === proj_id)].parts;
+    partsToRemove.forEach(part => {
+      parts[parts.findIndex(p => p.id === part.id)].availableAmount +=
+        part.proj_amount;
+    });
     projects.splice(
       projects.findIndex(e => {
         return e.id === proj_id;
@@ -193,6 +211,7 @@ class App extends Component {
     );
     this.setState({ projects });
     save(projects, "projects");
+    save(parts, "parts");
   };
 
   handleAddWish = newWish => {

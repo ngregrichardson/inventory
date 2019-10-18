@@ -82,10 +82,11 @@ class Inventory extends Component {
 
   handleRemoveParts = () => {
     let checkboxes = document.getElementsByClassName("partCheckbox");
+    console.log(checkboxes);
     let partsToRemove = [];
     for (var checkbox in checkboxes) {
       if (checkboxes[checkbox].checked === true) {
-        partsToRemove.push(checkboxes[checkbox].parentNode.parentNode.id);
+        partsToRemove.push(checkboxes[checkbox].parentNode.id);
       }
     }
     if (
@@ -263,7 +264,7 @@ class Inventory extends Component {
                       }}
                     ></input>
                   </div>
-                  <button className="iconBtn shortField">
+                  <button disabled={true} className="iconBtn shortField">
                     <img src={form} alt="order form icon"></img>
                   </button>
                 </div>
