@@ -2,3 +2,4 @@ gac.json
 *node_modules
 *.env
 clear.bat
+json.sqlite
