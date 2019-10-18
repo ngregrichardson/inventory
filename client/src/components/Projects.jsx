@@ -40,7 +40,7 @@ class Projects extends Component {
     if (JSON.stringify(parts) !== JSON.stringify(this.props.parts)) {
       this.setState({ parts: this.props.parts });
     }
-    if (JSON.stringify(projects) !== JSON.stringify(this.props.projects)) {
+    if (projects !== this.props.projects) {
       this.setState({ projects: this.props.projects });
     }
   };

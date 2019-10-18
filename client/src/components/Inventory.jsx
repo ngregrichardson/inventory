@@ -29,15 +29,18 @@ class Inventory extends Component {
     }
   };
 
-  componentDidUpdate = ({ locations, counters, parts }) => {
+  componentDidUpdate = ({ locations, counters, parts, projects }) => {
     if (JSON.stringify(locations) !== JSON.stringify(this.props.locations)) {
       this.setState({ locations: this.props.locations });
     }
     if (JSON.stringify(counters) !== JSON.stringify(this.props.counters)) {
       this.setState({ counters: this.props.counters });
     }
-    if (JSON.stringify(parts) !== JSON.stringify(this.props.parts)) {
+    if (parts !== this.props.parts) {
       this.setState({ parts: this.props.parts });
+    }
+    if (JSON.stringify(projects) !== JSON.stringify(this.props.projects)) {
+      this.setState({ projects: this.props.projects });
     }
   };
 

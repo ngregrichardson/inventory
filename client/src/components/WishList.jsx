@@ -24,7 +24,7 @@ class WishList extends Component {
     if (JSON.stringify(parts) !== JSON.stringify(this.props.parts)) {
       this.setState({ parts: this.props.parts });
     }
-    if (JSON.stringify(wishes) !== JSON.stringify(this.props.wishes)) {
+    if (wishes !== this.props.wishes) {
       this.setState({ wishes: this.props.wishes });
     }
   };
