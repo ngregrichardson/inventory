@@ -4,6 +4,8 @@ import classnames from "classnames";
 import Inventory from "./components/Inventory";
 import Projects from "./components/Projects";
 import WishList from "./components/WishList";
+import Locations from "./components/Locations";
+import Counters from "./components/Counters";
 
 class App extends Component {
   state = {
@@ -256,11 +258,42 @@ class App extends Component {
     save(wishes, "wishes");
   };
 
+  handleAddLocation = location => {
+    let { locations } = this.state;
+    locations.push(location);
+    this.setState({ locations });
+    save(locations, "locations");
+  };
+
+  handleRemoveLocations = locationsToRemove => {
+    let { locations } = this.state;
+    locationsToRemove.forEach(location => {
+      locations.splice(locations.indexOf(location), 1);
+    });
+    this.setState({ locations });
+    save(locations, "locations");
+  };
+
+  handleAddCounter = counter => {
+    let { counters } = this.state;
+    counters.push(counter);
+    this.setState({ counters });
+    save(counters, "counters");
+  };
+
+  handleRemoveCounters = countersToRemove => {
+    let { counters } = this.state;
+    countersToRemove.forEach(counter => {
+      counters.splice(counters.indexOf(counter), 1);
+    });
+    this.setState({ counters });
+    save(counters, "counters");
+  };
+
   componentDidMount = () => {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", () => {
       let res = JSON.parse(xhr.response);
-      console.log(res.counters);
       this.setState({
         parts: res.parts ? res.parts : [],
         projects: res.projects ? res.projects : [],
@@ -320,6 +353,30 @@ class App extends Component {
               Wish List
             </NavLink>
           </NavItem>
+          <NavItem className={classnames({ pointer: true })}>
+            <NavLink
+              className={classnames({
+                active: this.state.activeTab === "Locations"
+              })}
+              onClick={() => {
+                this.handleSwitchTab("Locations");
+              }}
+            >
+              Locations
+            </NavLink>
+          </NavItem>
+          <NavItem className={classnames({ pointer: true })}>
+            <NavLink
+              className={classnames({
+                active: this.state.activeTab === "Counters"
+              })}
+              onClick={() => {
+                this.handleSwitchTab("Counters");
+              }}
+            >
+              Counters
+            </NavLink>
+          </NavItem>
           <div id="mainError">{this.state.mainError}</div>
         </Nav>
         <TabContent activeTab={this.state.activeTab}>
@@ -355,6 +412,20 @@ class App extends Component {
               onRemoveWish={this.handleRemoveWish}
               onSave={this.handleSaveWish}
             ></WishList>
+          </TabPane>
+          <TabPane tabId="Locations">
+            <Locations
+              locations={this.state.locations}
+              onAddLocation={this.handleAddLocation}
+              onRemoveLocations={this.handleRemoveLocations}
+            ></Locations>
+          </TabPane>
+          <TabPane tabId="Counters">
+            <Counters
+              counters={this.state.counters}
+              onAddCounter={this.handleAddCounter}
+              onRemoveCounters={this.handleRemoveCounters}
+            ></Counters>
           </TabPane>
         </TabContent>
       </div>

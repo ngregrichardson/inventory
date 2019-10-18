@@ -28,21 +28,8 @@ app.get("/load", async (req, res) => {
     parts: db.get("parts"),
     projects: db.get("projects"),
     wishes: db.get("wishes"),
-    counters: await JSON.parse(
-      fs.readFileSync(path.join(__dirname, "counters.json"))
-    ),
-    locations: await JSON.parse(
-      fs.readFileSync(path.join(__dirname, "locations.json"))
-    )
-  };
-  res.json(data);
-});
-
-app.get("/load", (req, res) => {
-  let data = {
-    parts: db.get("parts"),
-    projects: db.get("projects"),
-    wishes: db.get("wishes")
+    locations: db.get("locations"),
+    counters: db.get("counters")
   };
   res.json(data);
 });

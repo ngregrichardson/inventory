@@ -30,10 +30,10 @@ class Inventory extends Component {
   };
 
   componentDidUpdate = ({ locations, counters, parts, projects }) => {
-    if (JSON.stringify(locations) !== JSON.stringify(this.props.locations)) {
+    if (locations !== this.props.locations) {
       this.setState({ locations: this.props.locations });
     }
-    if (JSON.stringify(counters) !== JSON.stringify(this.props.counters)) {
+    if (counters !== this.props.counters) {
       this.setState({ counters: this.props.counters });
     }
     if (parts !== this.props.parts) {

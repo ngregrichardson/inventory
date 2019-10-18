@@ -62,7 +62,7 @@ class WishList extends Component {
     let wishesToRemove = [];
     for (var checkbox in checkboxes) {
       if (checkboxes[checkbox].checked === true) {
-        wishesToRemove.push(checkboxes[checkbox].parentNode.parentNode.id);
+        wishesToRemove.push(checkboxes[checkbox].parentNode.id);
       }
     }
     if (
