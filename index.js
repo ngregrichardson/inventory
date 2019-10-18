@@ -28,7 +28,6 @@ app.get("/load", (req, res) => {
     projects: db.get("projects"),
     wishes: db.get("wishes")
   };
-  console.log(data);
   res.json(data);
 });
 

@@ -85,7 +85,6 @@ class Inventory extends Component {
 
   handleRemoveParts = () => {
     let checkboxes = document.getElementsByClassName("partCheckbox");
-    console.log(checkboxes);
     let partsToRemove = [];
     for (var checkbox in checkboxes) {
       if (checkboxes[checkbox].checked === true) {

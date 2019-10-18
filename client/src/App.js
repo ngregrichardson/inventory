@@ -50,7 +50,6 @@ class App extends Component {
   };
 
   handleRemovePart = partsToRemove => {
-    console.log(partsToRemove);
     let { parts, projects } = this.state;
     partsToRemove.forEach(id => {
       parts.splice(
@@ -389,7 +388,5 @@ let save = async (data, namespace) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ data, namespace })
-  }).then(res => {
-    console.log("Saved!");
-  });
+  }).then(res => {});
 };
