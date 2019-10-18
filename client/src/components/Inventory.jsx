@@ -70,7 +70,7 @@ class Inventory extends Component {
       name: document.getElementById("newPartName").value,
       location: document.getElementById("newPartLocation").value,
       amount: parseInt(document.getElementById("newPartAmount").value),
-      avaliableAmount: parseInt(document.getElementById("newPartAmount").value),
+      availableAmount: parseInt(document.getElementById("newPartAmount").value),
       counter: document.getElementById("newPartCounter").value,
       dateCounted: date,
       link: document.getElementById("newPartLink").value
@@ -103,8 +103,11 @@ class Inventory extends Component {
   };
 
   handleSave = (id, field) => {
-    let value = document.getElementById(`${id}_${field}`).children[1].value;
-    this.props.onSave(id, field, field === "amount" ? parseInt(value) : value);
+    let value =
+      field === "amount"
+        ? parseInt(document.getElementById(`${id}_${field}`).children[1].value)
+        : document.getElementById(`${id}_${field}`).children[0].value;
+    this.props.onSave(id, field, value);
   };
 
   handleSearch = () => {
@@ -173,8 +176,7 @@ class Inventory extends Component {
                       type="text"
                       name="name"
                       className="partText"
-                      value={part.name}
-                      onChange={e => this.props.onChange(e.target.value)}
+                      defaultValue={part.name}
                       onBlur={() => {
                         this.handleSave(part.id, "name");
                       }}
@@ -207,6 +209,9 @@ class Inventory extends Component {
                           ? "warning"
                           : "success"
                       }
+                      title={`You have ${part.availableAmount} ${
+                        part.availableAmount === 1 ? "part" : "parts"
+                      } not in use`}
                       style={{
                         display: "flex",
                         flexDirection: "row",
@@ -252,8 +257,7 @@ class Inventory extends Component {
                       type="date"
                       name="dateCounted"
                       className="partText"
-                      value={part.dateCounted}
-                      onChange={e => this.props.onChange(e.target.value)}
+                      defaultValue={part.dateCounted}
                       onBlur={() => {
                         this.handleSave(part.id, "dateCounted");
                       }}

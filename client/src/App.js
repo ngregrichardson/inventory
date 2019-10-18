@@ -7,72 +7,27 @@ import WishList from "./components/WishList";
 
 let locations = ["Dungeon", "Electrical HQ", "Computer Lab"];
 let counters = ["Noah", "Dani", "Brendan"];
-let parts = [
-  {
-    name: "Computer",
-    location: "Computer Lab",
-    amount: 10,
-    counter: "Noah",
-    dateCounted: "2019-02-26",
-    id: "5d8b6c300d9168",
-    availableAmount: 10
-  },
-  {
-    name: "VictorSP",
-    location: "Dungeon",
-    amount: 5,
-    counter: "Noah",
-    dateCounted: "2019-02-26",
-    id: "5d8b6ca7608314",
-    availableAmount: 5
-  },
-  {
-    name: "RoboRIO",
-    location: "Dungeon",
-    amount: 5,
-    counter: "Noah",
-    dateCounted: "2019-02-26",
-    id: "5d8b6cabb9db24",
-    availableAmount: 5
-  }
-];
-
-let projects = [
-  {
-    name: "Robot",
-    description: "test description",
-    id: "proj_5d8b6c308d9228",
-    parts: [
-      {
-        name: "VictorSP",
-        location: "Dungeon",
-        amount: 5,
-        counter: "Noah",
-        dateCounted: "2019-02-26",
-        id: "5d8b6ca7608314",
-        availableAmount: 5,
-        proj_amount: 5
-      }
-    ]
-  }
-];
-
-let wishes = [
-  {
-    name: "Talon SRX",
-    amount: 8,
-    id: "98jxvdbh4ai13x"
-  }
-];
 
 class App extends Component {
   state = {
     activeTab: "Inventory",
-    parts: parts,
-    projects: projects,
-    wishes: wishes,
+    parts: [],
+    projects: [],
+    wishes: [],
     mainError: ""
   };
+
+  // onUnload = e => {
+  //   e.returnValue = "Test";
+  // };
+
+  // componentDidMount = () => {
+  //   window.addEventListener("beforeunload", this.onUnload);
+  // };
+
+  // componentWillUnmount = () => {
+  //   window.removeEventListener("beforeunload", this.onUnload);
+  // };
 
   handleError = err => {
     if (this.state.mainError !== err) {
@@ -88,9 +43,10 @@ class App extends Component {
 
   handleAddPart = newPart => {
     let { parts } = this.state;
-    newPart["id"] = uniqid();
+    newPart["id"] = uniqid("p_");
     parts.push(newPart);
     this.setState({ parts });
+    save(parts, "parts");
   };
 
   handleRemovePart = partsToRemove => {
@@ -104,6 +60,7 @@ class App extends Component {
       );
     });
     this.setState({ parts });
+    save(parts, "parts");
   };
 
   handleSavePart = (id, field, value) => {
@@ -128,6 +85,7 @@ class App extends Component {
       }
     }
     this.setState({ parts });
+    save(parts, "parts");
   };
 
   handleAddProject = newProject => {
@@ -135,6 +93,7 @@ class App extends Component {
     newProject["id"] = uniqid("proj_");
     projects.push(newProject);
     this.setState({ projects });
+    save(projects, "projects");
   };
 
   handleSaveProjectPart = (proj_id, part_id, field, value) => {
@@ -154,7 +113,9 @@ class App extends Component {
           })
         ].proj_amount;
       if (part.availableAmount + (currentValue - value) < 0) {
-        return this.handleError("You do not have enough parts in stock");
+        return this.handleError(
+          "You do not have enough parts in stock. This change will not save."
+        );
       } else {
         parts[partIndex].availableAmount += currentValue - value;
       }
@@ -165,6 +126,8 @@ class App extends Component {
       })
     ][field] = value;
     this.setState({ parts, projects });
+    save(parts, "parts");
+    save(projects, "projects");
   };
 
   handleAddPartFromInventory = (proj_id, part_id, amount) => {
@@ -188,6 +151,8 @@ class App extends Component {
       part.proj_amount = amount;
       projects[index].parts.push(part);
       this.setState({ projects, parts });
+      save(parts, "parts");
+      save(projects, "projects");
     } else {
       return "This part is already in this project";
     }
@@ -214,6 +179,8 @@ class App extends Component {
       1
     );
     this.setState({ parts, projects });
+    save(parts, "parts");
+    save(projects, "projects");
   };
 
   handleRemoveProject = proj_id => {
@@ -225,6 +192,7 @@ class App extends Component {
       1
     );
     this.setState({ projects });
+    save(projects, "projects");
   };
 
   handleAddWish = newWish => {
@@ -232,6 +200,7 @@ class App extends Component {
     newWish["id"] = uniqid("wish_");
     wishes.push(newWish);
     this.setState({ wishes });
+    save(wishes, "wishes");
   };
 
   handleSave = (id, field, value) => {
@@ -242,6 +211,7 @@ class App extends Component {
       })
     ][field] = field !== "amount" ? value : parseInt(value);
     this.setState({ parts });
+    save(parts, "parts");
   };
 
   handleRemoveWish = wishesToRemove => {
@@ -255,6 +225,7 @@ class App extends Component {
       );
     });
     this.setState({ wishes });
+    save(wishes, "wishes");
   };
 
   handleSaveWish = (id, field, value) => {
@@ -265,6 +236,21 @@ class App extends Component {
       })
     ][field] = field !== "amount" ? value : parseInt(value);
     this.setState({ wishes });
+    save(wishes, "wishes");
+  };
+
+  componentDidMount = () => {
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", () => {
+      let res = JSON.parse(xhr.response);
+      this.setState({
+        parts: res.parts ? res.parts : [],
+        projects: res.projects ? res.projects : [],
+        wishes: res.wishes ? res.wishes : []
+      });
+    });
+    xhr.open("GET", "/load");
+    xhr.send();
   };
 
   render() {
@@ -374,4 +360,17 @@ let uniqid = (a = "", b = false, long = false) => {
     e += f;
   }
   return a + d + e;
+};
+
+let save = async (data, namespace) => {
+  fetch("/save", {
+    method: "post",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ data, namespace })
+  }).then(res => {
+    console.log("Saved!");
+  });
 };

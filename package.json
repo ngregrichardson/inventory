@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "express-favicon": "^2.0.1",
     "nodemon": "^1.19.2",
+    "quick.db": "^7.0.0-b22",
     "tracer": "^1.0.1"
   }
 }
