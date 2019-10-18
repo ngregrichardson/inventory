@@ -21,11 +21,11 @@ class WishList extends Component {
   };
 
   componentDidUpdate = ({ parts, wishes }) => {
-    if (JSON.stringify(parts) !== JSON.stringify(this.state.parts)) {
-      this.setState({ parts });
+    if (JSON.stringify(parts) !== JSON.stringify(this.props.parts)) {
+      this.setState({ parts: this.props.parts });
     }
-    if (JSON.stringify(wishes) !== JSON.stringify(this.state.wishes)) {
-      this.setState({ wishes });
+    if (JSON.stringify(wishes) !== JSON.stringify(this.props.wishes)) {
+      this.setState({ wishes: this.props.wishes });
     }
   };
 

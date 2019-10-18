@@ -37,11 +37,11 @@ class Projects extends Component {
   };
 
   componentDidUpdate = ({ parts, projects }) => {
-    if (JSON.stringify(parts) !== JSON.stringify(this.state.parts)) {
-      this.setState({ parts });
+    if (JSON.stringify(parts) !== JSON.stringify(this.props.parts)) {
+      this.setState({ parts: this.props.parts });
     }
-    if (JSON.stringify(projects) !== JSON.stringify(this.state.projects)) {
-      this.setState({ projects });
+    if (JSON.stringify(projects) !== JSON.stringify(this.props.projects)) {
+      this.setState({ projects: this.props.projects });
     }
   };
 
