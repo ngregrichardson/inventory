@@ -5,15 +5,14 @@ import Inventory from "./components/Inventory";
 import Projects from "./components/Projects";
 import WishList from "./components/WishList";
 
-let locations = ["Dungeon", "Electrical HQ", "Computer Lab"];
-let counters = ["Noah", "Dani", "Brendan"];
-
 class App extends Component {
   state = {
     activeTab: "Inventory",
     parts: [],
     projects: [],
     wishes: [],
+    counters: [],
+    locations: [],
     mainError: ""
   };
 
@@ -261,10 +260,13 @@ class App extends Component {
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", () => {
       let res = JSON.parse(xhr.response);
+      console.log(res.counters);
       this.setState({
         parts: res.parts ? res.parts : [],
         projects: res.projects ? res.projects : [],
-        wishes: res.wishes ? res.wishes : []
+        wishes: res.wishes ? res.wishes : [],
+        counters: res.counters ? res.counters : [],
+        locations: res.locations ? res.locations : []
       });
     });
     xhr.open("GET", "/load");
@@ -323,8 +325,8 @@ class App extends Component {
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="Inventory">
             <Inventory
-              locations={locations}
-              counters={counters}
+              locations={this.state.locations}
+              counters={this.state.counters}
               parts={this.state.parts}
               onAddPart={this.handleAddPart}
               onRemovePart={this.handleRemovePart}
@@ -334,8 +336,8 @@ class App extends Component {
           </TabPane>
           <TabPane tabId="Projects">
             <Projects
-              locations={locations}
-              counters={counters}
+              locations={this.state.locations}
+              counters={this.state.counters}
               parts={this.state.parts}
               projects={this.state.projects}
               onAddProject={this.handleAddProject}

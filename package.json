@@ -2,11 +2,11 @@
   "name": "inventory",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "inventory.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"nodemon index.js\" \"cd client && npm start\"",
-    "deploy": "node index.js",
+    "start": "concurrently \"nodemon inventory.js\" \"cd client && npm start\"",
+    "deploy": "node inventory.js",
     "build": "cd client && npm run build"
   },
   "author": "",
