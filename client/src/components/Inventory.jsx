@@ -29,7 +29,7 @@ class Inventory extends Component {
     }
   };
 
-  componentWillReceiveProps = ({ locations, counters, parts }) => {
+  componentDidUpdate = ({ locations, counters, parts }) => {
     if (JSON.stringify(locations) !== JSON.stringify(this.state.locations)) {
       this.setState({ locations });
     }

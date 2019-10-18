@@ -20,7 +20,7 @@ class WishList extends Component {
     }
   };
 
-  componentWillReceiveProps = ({ parts, wishes }) => {
+  componentDidUpdate = ({ parts, wishes }) => {
     if (JSON.stringify(parts) !== JSON.stringify(this.state.parts)) {
       this.setState({ parts });
     }

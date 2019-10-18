@@ -5,13 +5,11 @@ import add from "../images/add.svg";
 import remove from "../images/remove.svg";
 import search from "../images/search.svg";
 import addPart from "../images/add-part.svg";
-import addWish from "../images/add-wish.svg";
+// import addWish from "../images/add-wish.svg";
 // import form from "../images/form.svg";
 
 class Projects extends Component {
   state = {
-    locations: this.props.locations,
-    counters: this.props.counters,
     parts: this.props.parts,
     projects: this.props.projects,
     term: "",
@@ -38,13 +36,7 @@ class Projects extends Component {
     }
   };
 
-  componentWillReceiveProps = ({ locations, counters, parts, projects }) => {
-    if (JSON.stringify(locations) !== JSON.stringify(this.state.locations)) {
-      this.setState({ locations });
-    }
-    if (JSON.stringify(counters) !== JSON.stringify(this.state.counters)) {
-      this.setState({ counters });
-    }
+  componentDidUpdate = ({ parts, projects }) => {
     if (JSON.stringify(parts) !== JSON.stringify(this.state.parts)) {
       this.setState({ parts });
     }
