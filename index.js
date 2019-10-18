@@ -31,6 +31,6 @@ app.get("/load", (req, res) => {
   res.json(data);
 });
 
-app.listen(process.env.PORT || 3001, () =>
-  tracer.log(`Listening on port ${process.env.PORT || 3001}`)
+app.listen(process.env.PORT || 8001, () =>
+  tracer.log(`Listening on port ${process.env.PORT || 8001}`)
 );
